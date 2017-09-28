@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^users/', include('users.urls')),
     url(r'^users/', include('django.contrib.auth.urls')),
     url(r'^$', views.index, name='index'),
-    url(r'^cal/', views.calculate, name='calculate')
+    url(r'^cal/', views.calculate, name='calculate'),
+    url(r'^end/', views.calculate_end, name='calculate_end')
 ]

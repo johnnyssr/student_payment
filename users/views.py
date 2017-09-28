@@ -5,6 +5,8 @@ from .models import student,time_record
 from django import template
 from .models import User
 import time
+from datetime import datetime
+
 
 
 def register(request):
@@ -57,11 +59,45 @@ def index(request):
 #没有卵用的方法
 def calculate(request):
     try:
-        post_list = student.objects.all()
+        student_info = student.objects.get(student_id=request.user.student_id)
         time1 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-        for user in post_list:
-            if user.student_id == 16126193:
-                time_record.objects.create(start_time = time1,student=user,end_time = time1)
+        #time1 = datetime.strptime(time1, '%Y-%m-%d %H:%M:%S')
+        time_record.objects.create(time = time1,student=student_info,type = '开始时间')
     except student.DoesNotExist:
         raise Http404
-    return render(request,'test.html',{'time1':time1})
+    return render(request,'test.html',{'time1': time1})
+
+def calculate_end(request):
+    try:
+        time2 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+        #计算时间差
+        record_list = time_record.objects.all()
+        student_info = student.objects.get(student_id=request.user.student_id)
+        time_list = []
+        for record in record_list:
+            if record.student_id == request.user.student_id:
+                if record.type == '开始时间':
+                    time_list.append(record.time)
+        time1 = max(time_list)
+        #cal = (time2 - time1).days
+        time3 = datetime.strptime(time2,'%Y-%m-%d %H:%M:%S')
+        cal = time3-time1
+        cal2 = (time3-time1).seconds/3600
+        if cal2>=0.5 and cal2 <=1:
+            cal2 = 1
+        elif cal2 >1.5 and cal2 <=2:
+            cal2 =2
+        else:
+            cal2 = 0.5
+        sum_time = cal2 + student_info.time
+        student_info.time = sum_time
+        student_info.save()
+        #向时间表中插入用户点击结束的时间
+        time_record.objects.create(time = time2,student=student_info,type = '结束时间')
+
+    except student.DoesNotExist:
+        raise Http404
+    return render(request,'time_end.html',{'time2': time2,'cal':cal})
+
+

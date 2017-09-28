@@ -29,5 +29,5 @@ class student(models.Model):
 
 class time_record(models.Model):
     student = models.ForeignKey(student)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    time = models.DateTimeField()
+    type = models.CharField(max_length=10,default='开始时间')

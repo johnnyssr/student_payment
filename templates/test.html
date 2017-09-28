@@ -11,7 +11,7 @@
 <div class="flex-center">
     <div class="container">
         <div>
-            <h1 class="logo"><a href="{% url 'index' %}">主页</a></h1>
+            <h1 class="logo"><a href="{% url 'index' %}">签到页面</a></h1>
             {% if user.is_authenticated %}
                 <p>你已登录，欢迎你：<a href="#">{{ user.username }}</a></p>
                 <button class="btn btn-default"><a href="{% url 'logout' %}?next={{ request.path }}">注销登录</a>
@@ -19,10 +19,10 @@
                 <button class="btn btn-default"><a href="{% url 'password_change' %}?next={{ request.path }}">修改密码</a>
                 </button>
                 <div>
-                开始计时时间：{{ time1 }}
-                <button class="btn btn-default"><a href="/">离岗走人</a>
-
+                开始计时时间为：{{ time1 }}
+                <button class="btn btn-default"><a href="/end">离岗走人</a>
                 </button>
+
                 </div>
 
                 <div>
